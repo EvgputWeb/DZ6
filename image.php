@@ -1,30 +1,14 @@
 <?php
-// include composer autoload
-require 'vendor/autoload.php';
 
-// import the Intervention Image Manager Class
-use Intervention\Image\ImageManagerStatic as Image;
+require_once 'ImageTransformer.php';
 
-// configure with favored image driver (gd by default)
-Image::configure(array('driver' => 'gd'));
+$img = new ImageTransformer('nature.jpg');
 
-// Поворачиваем
-$img = Image::make('nature.jpg');
-$img->rotate(-45);
-$img->save('nature_rotated.jpg');
+// Поворот
+$img->rotate(45,'nature_rotated.jpg');
 
-// Наносим ватермарк
-$img = Image::make('nature.jpg');
-$watermark = Image::make('watermark.png');
-$watermark->resize(round(0.75 * $img->width()), null, function ($constraint) {
-    $constraint->aspectRatio();
-});
-$img->insert($watermark, 'center');
-$img->save('nature_watermarked.jpg');
+// Нанесение водяного знака
+$img->setWatermark('watermark.png', 0.75 ,'center','nature_watermarked.jpg');
 
-// Изменяем размер
-$img = Image::make('nature.jpg');
-$img->resize(200, null, function ($constraint) {
-    $constraint->aspectRatio();
-});
-$img->save('nature_resized.jpg');
+// Изменение размера
+$img->resizeProportional(200,'nature_resized.jpg');
